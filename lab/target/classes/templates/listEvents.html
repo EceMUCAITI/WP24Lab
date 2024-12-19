@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Event Booking Page - Welcome and Choose an Event</title>
+  <style type="text/css">
+    body {
+      width: 800px;
+      margin: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    input[type="number"], input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 5px 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    button[type="submit"] {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+    }
+
+    button[type="button"] {
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .auth-buttons {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .auth-buttons button {
+      margin: 0;
+    }
+
+    .add-event-button {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Welcome to Our Event Booking App</h1>
+</header>
+<main>
+
+
+  <div class="add-event-button">
+    <button type="button" th:if="${#authentication.authenticated}"
+            th:onclick="|window.location.href='@{/events/add-form}'|">Add Event</button>
+  </div>
+
+  <!-- Main booking form -->
+  <form id="b1" method="post" th:action="@{/events/submit}">
+    <h2>Choose an Event:</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>Select</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Popularity</th>
+        <th>Actions</th>
+        <th>Tickets</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="event : ${events}">
+        <!-- Radio button to select the event -->
+        <td>
+          <input type="radio" name="selectedEventId" th:value="${event.id}" required>
+        </td>
+        <!-- Event details -->
+        <td th:text="${event.name}">Event Name</td>
+        <td th:text="${event.description}">Event Description</td>
+        <td th:text="${event.popularityScore}">0.0</td>
+        <!-- Edit and delete buttons -->
+        <td>
+          <button type="button" th:onclick="|window.location.href='@{/events/edit-form/{id}(id=${event.id})}'|">
+            Edit
+          </button>
+          <button type="button" th:onclick="|window.location.href='@{/events/delete/{id}(id=${event.id})}'|">
+            Delete
+          </button>
+        </td>
+        <!-- Ticket input -->
+        <td>
+          <input type="number" name="ticketCount" min="1" value="1" required>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <!-- Submit button for booking -->
+    <button type="submit">Book Tickets</button>
+  </form>
+</main>
+</body>
+</html>
